@@ -2,21 +2,21 @@ package com.rkgroup.app.ui
 
 import android.content.ContentResolver
 import android.net.Uri
-import android.webkit.MimeTypeMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rkgroup.app.data.repository.FileUploadRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor() : ViewModel() {
+class MainViewModel @Inject constructor(
+    private val fileUploadRepository: FileUploadRepository
+) : ViewModel() {
 
     companion object {
         private const val MAX_FILE_SIZE = 2L * 1024 * 1024 * 1024 // 2GB max file size
@@ -109,14 +109,15 @@ class MainViewModel @Inject constructor() : ViewModel() {
     }
 
     private suspend fun processFile(fileInfo: FileInfo) {
-        withContext(Dispatchers.IO) {
-            try {
-                // TODO: Here we'll add the actual file upload logic
-                // For now, just simulate processing
-                simulateProcessing(fileInfo)
-            } catch (e: Exception) {
-                throw IOException("Failed to process ${fileInfo.name}: ${e.message}")
-            }
+        try {
+            fileUploadRepository.uploadFile(
+                uri = fileInfo.uri,
+                fileName = fileInfo.name,
+                mimeType = fileInfo.mimeType,
+                contentResolver = contentResolver
+            )
+        } catch (e: Exception) {
+            throw IOException("Failed to upload ${fileInfo.name}: ${e.message}")
         }
     }
 
