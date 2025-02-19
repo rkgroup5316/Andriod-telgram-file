@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.telegram.file.app"
+    namespace = "com.rkgroup.app"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.telegram.file.app"
+        applicationId = "com.rkgroup.app"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
