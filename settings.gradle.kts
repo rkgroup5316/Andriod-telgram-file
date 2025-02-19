@@ -82,7 +82,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "AndroidTelegramFile"
+rootProject.name = "File Manager"
 
 // Include app module
 include(":app")
