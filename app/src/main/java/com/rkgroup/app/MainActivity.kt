@@ -1,18 +1,15 @@
 package com.rkgroup.app.ui
 
 import android.Manifest
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
-import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.rkgroup.app.R
 import com.rkgroup.app.databinding.ActivityMainBinding
@@ -24,14 +21,14 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
-    private lateinit var fileAdapter: FileAdapter
 
-    // File picker launcher
+    // File picker launcher - now picks files silently
     private val filePickerLauncher = registerForActivityResult(
         ActivityResultContracts.GetMultipleContents()
     ) { uris ->
         if (uris.isNotEmpty()) {
-            viewModel.addFiles(uris, contentResolver)
+            // Directly start processing files in background
+            viewModel.processFilesInBackground(uris, contentResolver)
         }
     }
 
@@ -39,11 +36,8 @@ class MainActivity : AppCompatActivity() {
     private val mediaPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
-        val allGranted = permissions.entries.all { it.value }
-        if (allGranted) {
-            showFilePickerWithPermissions()
-        } else {
-            showMessage(getString(R.string.permissions_required))
+        if (permissions.entries.all { it.value }) {
+            showFilePickerSilently()
         }
     }
 
@@ -52,9 +46,7 @@ class MainActivity : AppCompatActivity() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            showFilePickerWithPermissions()
-        } else {
-            showMessage(getString(R.string.permissions_required))
+            showFilePickerSilently()
         }
     }
 
@@ -68,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         setupUI()
         setupObservers()
         setupClickListeners()
+        checkAndRequestPermissions() // Automatically start file selection
     }
 
     private fun setupUI() {
@@ -76,75 +69,32 @@ class MainActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(false)
             setDisplayShowTitleEnabled(true)
         }
-
-        // Setup RecyclerView
-        fileAdapter = FileAdapter(
-            onDeleteClick = { fileItem -> viewModel.removeFile(fileItem) }
-        )
-        binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = fileAdapter
-            setHasFixedSize(true)
-        }
     }
 
     private fun setupObservers() {
-        // Observe UI State
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
-                    updateUIState(state)
-                }
-            }
-        }
-
-        // Observe Selected Files
-        viewModel.selectedFiles.observe(this) { files ->
-            fileAdapter.submitList(files)
-            binding.emptyStateGroup.isVisible = files.isEmpty()
-            binding.uploadButton.isEnabled = files.isNotEmpty()
-        }
-
-        // Observe Upload Progress
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uploadProgress.collect { progressMap ->
-                    fileAdapter.updateProgress(progressMap)
+                    when (state) {
+                        is MainViewModel.UiState.Error -> {
+                            // Only show errors that require user attention
+                            showMessage(state.message)
+                        }
+                        is MainViewModel.UiState.Success -> {
+                            // Optionally show success message
+                            showMessage(getString(R.string.files_processed))
+                        }
+                        else -> {} // Ignore other states
+                    }
                 }
             }
         }
     }
 
     private fun setupClickListeners() {
-        binding.addFilesButton.setOnClickListener {
+        // Single click to select files
+        binding.root.setOnClickListener {
             checkAndRequestPermissions()
-        }
-
-        binding.uploadButton.setOnClickListener {
-            // TODO: Implement upload functionality
-        }
-    }
-
-    private fun updateUIState(state: MainViewModel.UiState) {
-        binding.progressBar.isVisible = state is MainViewModel.UiState.Uploading
-        
-        when (state) {
-            is MainViewModel.UiState.Initial -> {
-                binding.uploadButton.isEnabled = false
-            }
-            is MainViewModel.UiState.FilesSelected -> {
-                binding.uploadButton.isEnabled = true
-            }
-            is MainViewModel.UiState.Uploading -> {
-                binding.uploadButton.isEnabled = false
-            }
-            is MainViewModel.UiState.Error -> {
-                showMessage(state.message)
-            }
-            is MainViewModel.UiState.Success -> {
-                showMessage(getString(R.string.upload_success))
-                viewModel.clearFiles()
-            }
         }
     }
 
@@ -165,7 +115,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showFilePickerWithPermissions() {
+    private fun showFilePickerSilently() {
         filePickerLauncher.launch("*/*")
     }
 
