@@ -20,4 +20,9 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Andriod-telgram-file"
+
+// Include all modules
 include(":app")
+include(":library-android")
+include(":library-compose")
+include(":library-kotlin")
