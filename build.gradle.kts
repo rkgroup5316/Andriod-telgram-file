@@ -1,21 +1,13 @@
 plugins {
-    // Core plugins - Use version catalog instead of hardcoded versions
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.kapt) apply false
-    
-    // Dependency injection
     alias(libs.plugins.hilt) apply false
-    
-    // Static code analysis
     alias(libs.plugins.detekt)
-    
-    // Dependency updates checker
     alias(libs.plugins.versions)
 }
 
-// Remove extra version definitions since they're in version catalog
 allprojects {
     repositories {
         google()
