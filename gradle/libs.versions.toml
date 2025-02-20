@@ -1,60 +1,64 @@
 [versions]
-# Existing versions
+# Build & SDK
 agp = "8.2.0"
-androidx_activity_compose = "1.9.3"
-androidx_test = "1.6.1"
-androidx_test_ext = "1.2.1"
-appcompat = "1.7.0"
-compile_sdk_version = "34"
-compose-bom = "2024.12.01"
-compose_compilerextension = "1.5.5"
-constraint_layout = "2.2.0"
-core_ktx = "1.13.1"
-detekt = "1.23.7"
-espresso_core = "3.6.1"
-junit = "4.13.2"
 kotlin = "1.9.20"
-min_sdk_version = "23"
+compile_sdk_version = "34"
 target_sdk_version = "34"
-benmanesversion = "0.52.0"
+min_sdk_version = "26"
 
-# Added necessary versions
+# Core Android
+core_ktx = "1.12.0"
+appcompat = "1.7.0"
+material = "1.11.0"
+constraint_layout = "2.2.0"
+
+# Architecture Components
 lifecycle = "2.7.0"
 work = "2.9.0"
+room = "2.6.1"
+datastore = "1.0.0"
+
+# Dependency Injection
 hilt = "2.48"
+
+# Networking & Data
 retrofit = "2.9.0"
 okhttp = "4.12.0"
+gson = "2.10.1"
+coil = "2.5.0"
+
+# Coroutines
 coroutines = "1.7.3"
-material = "1.11.0"
+
+# Security
+security_crypto = "1.1.0-alpha06"
+biometric = "1.2.0-alpha05"
+
+# Testing
+junit = "4.13.2"
+androidx_test = "1.6.1"
+androidx_test_ext = "1.2.1"
+espresso_core = "3.6.1"
+mockk = "1.13.8"
+turbine = "1.0.0"
+
+# Debug & Performance
+timber = "5.0.1"
+leakcanary = "2.12"
+
+# Tools
 desugar = "2.0.4"
+detekt = "1.23.7"
+benmanesversion = "0.52.0"
 
 [libraries]
-# Existing libraries
-junit = { module = "junit:junit", version.ref = "junit" }
-androidx_activity_compose = { module = "androidx.activity:activity-compose", version.ref = "androidx_activity_compose" }
-androidx_appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
-androidx_constraint_layout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraint_layout" }
-androidx_core_ktx = { module = "androidx.core:core-ktx", version.ref = "core_ktx" }
-androidx_test_rules = { module = "androidx.test:rules", version.ref = "androidx_test" }
-androidx_test_runner = { module = "androidx.test:runner", version.ref = "androidx_test" }
-androidx_test_ext_junit = { module = "androidx.test.ext:junit", version.ref = "androidx_test_ext" }
-androidx_test_ext_junit_ktx = { module = "androidx.test.ext:junit-ktx", version.ref = "androidx_test_ext" }
-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
-compose_material = { module = "androidx.compose.material:material" }
-compose_foundation = { module = "androidx.compose.foundation:foundation" }
-compose_ui = { module = "androidx.compose.ui:ui" }
-compose_ui_tooling = { module = "androidx.compose.ui:ui-tooling" }
-compose_ui_test_junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
-compose_ui_test_manifest = { module = "androidx.compose.ui:ui-test-manifest" }
-detekt_formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
-espresso_core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso_core" }
-agp = { module = "com.android.tools.build:gradle", version.ref = "agp" }
-kgp = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-
-# Added necessary libraries
+# Core Android
+core-ktx = { module = "androidx.core:core-ktx", version.ref = "core_ktx" }
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
+constraint-layout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraint_layout" }
 
-# Lifecycle components
+# Lifecycle Components
 lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 lifecycle-livedata = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
 lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
@@ -62,33 +66,65 @@ lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version.r
 
 # WorkManager
 work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "work" }
+work-testing = { module = "androidx.work:work-testing", version.ref = "work" }
 
-# Hilt for dependency injection
+# Room Database
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+
+# DataStore
+datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+
+# Hilt DI
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+hilt-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
 
 # Networking
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 
 # Coroutines
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 
-# Desugaring
+# Security
+security-crypto = { module = "androidx.security:security-crypto", version.ref = "security_crypto" }
+biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
+
+# Testing
+junit = { module = "junit:junit", version.ref = "junit" }
+androidx-test-junit = { module = "androidx.test.ext:junit", version.ref = "androidx_test_ext" }
+androidx-test-core = { module = "androidx.test:core", version.ref = "androidx_test" }
+androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx_test" }
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx_test" }
+espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso_core" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+
+# Debug
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary" }
+
+# Gradle Plugins
+agp = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+kgp = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
+
+# Tools
 android-desugar = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar" }
 
 [plugins]
-# Existing plugins
-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
-versions = { id = "com.github.ben-manes.versions", version.ref = "benmanesversion" }
-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
-# Added necessary plugins
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+versions = { id = "com.github.ben-manes.versions", version.ref = "benmanesversion" }
