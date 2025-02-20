@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,8 +42,14 @@ class MainViewModel @Inject constructor(
                     return@launch
                 }
 
-                validFiles.forEach { fileInfo ->
-                    processFile(fileInfo)
+                val totalFiles = validFiles.size
+                validFiles.forEachIndexed { index, fileInfo ->
+                    _uiState.value = UiState.Progress(
+                        current = index + 1,
+                        total = totalFiles,
+                        fileName = fileInfo.name
+                    )
+                    processFile(fileInfo, contentResolver)
                 }
                 
                 _uiState.value = UiState.Success
@@ -69,13 +77,16 @@ class MainViewModel @Inject constructor(
 
                 when {
                     mimeType == null -> {
-                        null // Skip files without mime type
+                        _uiState.value = UiState.Error("Invalid file type for: $name")
+                        null
                     }
                     !isValidMimeType(mimeType) -> {
-                        null // Skip unsupported file types
+                        _uiState.value = UiState.Error("Unsupported file type: $name")
+                        null
                     }
                     size > MAX_FILE_SIZE -> {
-                        null // Skip files larger than 2GB
+                        _uiState.value = UiState.Error("File too large: $name")
+                        null
                     }
                     else -> FileInfo(
                         uri = uri,
@@ -85,7 +96,8 @@ class MainViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                null // Skip problematic files
+                _uiState.value = UiState.Error("Error processing file: ${e.message}")
+                null
             }
         }
     }
@@ -97,18 +109,21 @@ class MainViewModel @Inject constructor(
     }
 
     private fun getFileName(uri: Uri, contentResolver: ContentResolver): String? {
-        contentResolver.query(uri, null, null, null, null)?.use { cursor ->
-            if (cursor.moveToFirst()) {
-                val nameIndex = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)
-                if (nameIndex != -1) {
-                    return cursor.getString(nameIndex)
-                }
-            }
+        return try {
+            contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+                if (cursor.moveToFirst()) {
+                    val nameIndex = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)
+                    if (nameIndex != -1) {
+                        cursor.getString(nameIndex)
+                    } else null
+                } else null
+            } ?: uri.lastPathSegment
+        } catch (e: Exception) {
+            uri.lastPathSegment
         }
-        return uri.lastPathSegment
     }
 
-    private suspend fun processFile(fileInfo: FileInfo) {
+    private suspend fun processFile(fileInfo: FileInfo, contentResolver: ContentResolver) {
         try {
             fileUploadRepository.uploadFile(
                 uri = fileInfo.uri,
@@ -121,14 +136,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private suspend fun simulateProcessing(fileInfo: FileInfo) {
-        // This is temporary and will be replaced with actual upload logic
-        withContext(Dispatchers.IO) {
-            // Simulate some work
-            kotlinx.coroutines.delay(1000)
-        }
-    }
-
     data class FileInfo(
         val uri: Uri,
         val name: String,
@@ -138,6 +145,11 @@ class MainViewModel @Inject constructor(
 
     sealed class UiState {
         object Initial : UiState()
+        data class Progress(
+            val current: Int,
+            val total: Int,
+            val fileName: String
+        ) : UiState()
         object Success : UiState()
         data class Error(val message: String) : UiState()
     }
