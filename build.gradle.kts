@@ -8,13 +8,7 @@ plugins {
     alias(libs.plugins.versions)
 }
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
+// Remove the allprojects block completely
 
 subprojects {
     apply(plugin = "io.gitlab.arturbosch.detekt")
