@@ -25,4 +25,4 @@ dependencyResolutionManagement {
 rootProject.name = "Andriod-telgram-file"
 
 // Include all modules
-include(":app", ":buildSrc")
+include(":app")
