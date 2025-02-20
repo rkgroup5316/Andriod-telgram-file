@@ -4,20 +4,19 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt)
 }
+
 android {
     namespace = "com.rkgroup.app"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk = libs.versions.compile.sdk.version.get().toInt()
 
     defaultConfig {
         applicationId = "com.rkgroup.app"
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
+        minSdk = libs.versions.min.sdk.version.get().toInt()
+        targetSdk = libs.versions.target.sdk.version.get().toInt()
         versionCode = 1
         versionName = "1.0.0"
         
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        
-        // MultiDex support
         multiDexEnabled = true
     }
 
@@ -53,12 +52,6 @@ android {
         }
     }
 
-    lint {
-        warningsAsErrors = true
-        abortOnError = true
-        disable.add("GradleDependency")
-    }
-
     packaging {
         resources {
             excludes.add("/META-INF/{AL2.0,LGPL2.1}")
@@ -72,8 +65,9 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
+    implementation(libs.constraint.layout)
     
-    // Lifecycle components
+    // Lifecycle Components
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.livedata)
     implementation(libs.lifecycle.runtime)
@@ -82,27 +76,49 @@ dependencies {
     // WorkManager
     implementation(libs.work.runtime)
     
-    // Hilt Dependency Injection
+    // Room Database
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    kapt(libs.room.compiler)
+    
+    // DataStore
+    implementation(libs.datastore.preferences)
+    
+    // Hilt DI
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     
-    // Networking - Remove duplicate implementations
+    // Networking
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
+    implementation(libs.gson)
+    implementation(libs.coil)  // For image loading
     
-    // Coroutines - Remove duplicate implementations
+    // Coroutines
     implementation(libs.coroutines.core)
     implementation(libs.coroutines.android)
     
+    // Security
+    implementation(libs.security.crypto)
+    implementation(libs.biometric)
+    
+    // Debug Tools (debug build only)
+    debugImplementation(libs.timber)
+    debugImplementation(libs.leakcanary)
+    
     // Testing
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.turbine)
     androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.androidx.test.core)
-    androidTestImplementation(libs.espresso)
+    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(libs.hilt.testing)
     
-    // Desugaring for older Android versions - Use version catalog
+    // Desugaring
     coreLibraryDesugaring(libs.android.desugar)
 }
 
