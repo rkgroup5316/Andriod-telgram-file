@@ -12,9 +12,12 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
     }
+    versionCatalogs {
+        create("libs") {
+            from(files("gradle/libs.versions.toml"))
+        }
+    }
 }
 
-rootProject.name = "File Manager"
-
-// Include app module
+rootProject.name = "Andriod-telgram-file"
 include(":app")
