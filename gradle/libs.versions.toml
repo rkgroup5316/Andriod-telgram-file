@@ -1,4 +1,5 @@
 [versions]
+# Existing versions
 agp = "8.8.1"
 androidx_activity_compose = "1.9.3"
 androidx_test = "1.6.1"
@@ -17,16 +18,27 @@ min_sdk_version = "23"
 target_sdk_version = "34"
 benmanesversion = "0.52.0"
 
+# Added necessary versions
+lifecycle = "2.7.0"
+work = "2.9.0"
+hilt = "2.48"
+retrofit = "2.9.0"
+okhttp = "4.12.0"
+coroutines = "1.7.3"
+material = "1.11.0"
+desugar = "2.0.4"
+
 [libraries]
+# Existing libraries
 junit = { module = "junit:junit", version.ref = "junit" }
 androidx_activity_compose = { module = "androidx.activity:activity-compose", version.ref = "androidx_activity_compose" }
 androidx_appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
-androidx_constraint_layout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraint.layout" }
-androidx_core_ktx = { module = "androidx.core:core-ktx", version.ref = "core.ktx" }
-androidx_test_rules = { module = "androidx.test:rules", version.ref = "androidx.test" }
-androidx_test_runner = { module = "androidx.test:runner", version.ref = "androidx.test" }
-androidx_test_ext_junit = { module = "androidx.test.ext:junit", version.ref = "androidx.test.ext" }
-androidx_test_ext_junit_ktx = { module = "androidx.test.ext:junit-ktx", version.ref = "androidx.test.ext" }
+androidx_constraint_layout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraint_layout" }
+androidx_core_ktx = { module = "androidx.core:core-ktx", version.ref = "core_ktx" }
+androidx_test_rules = { module = "androidx.test:rules", version.ref = "androidx_test" }
+androidx_test_runner = { module = "androidx.test:runner", version.ref = "androidx_test" }
+androidx_test_ext_junit = { module = "androidx.test.ext:junit", version.ref = "androidx_test_ext" }
+androidx_test_ext_junit_ktx = { module = "androidx.test.ext:junit-ktx", version.ref = "androidx_test_ext" }
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
 compose_material = { module = "androidx.compose.material:material" }
 compose_foundation = { module = "androidx.compose.foundation:foundation" }
@@ -35,11 +47,48 @@ compose_ui_tooling = { module = "androidx.compose.ui:ui-tooling" }
 compose_ui_test_junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
 compose_ui_test_manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 detekt_formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
-espresso_core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso.core" }
+espresso_core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso_core" }
 agp = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 kgp = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 
+# Added necessary libraries
+material = { module = "com.google.android.material:material", version.ref = "material" }
+
+# Lifecycle components
+lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+lifecycle-livedata = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
+lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
+lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version.ref = "lifecycle" }
+
+# WorkManager
+work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "work" }
+
+# Hilt for dependency injection
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+
+# Networking
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofit-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
+
+# Coroutines
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+
+# Desugaring
+android-desugar = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar" }
+
 [plugins]
+# Existing plugins
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "benmanesversion" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+
+# Added necessary plugins
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
