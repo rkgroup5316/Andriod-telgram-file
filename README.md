@@ -1,6 +1,6 @@
 I am developing an Android app using the Kotlin Android Template(https://github.com/cortinico/kotlin-android-template). This app should allow users to select and send files to a Telegram channel using the Telegram Bot API.
 
-Core Requirements:
+# Core Requirements:
 
 User Interface: The app should have a simple UI with a single button. When clicked, it should open the native Android file selector.
 
@@ -17,7 +17,9 @@ Error Handling & Optimization: The app should be highly optimized, with robust e
 Permissions: Request all required permissions at app launch for seamless operation.
 
 
-Technical Considerations:
+# Technical Considerations:
+
+Add other modules incrementally as needed
 
 Use the Telegram Bot API for file uploads (strictly no polling or webhooks).
 
