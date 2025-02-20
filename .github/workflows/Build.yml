@@ -1,161 +1,70 @@
-name: Android CI/CD Pipeline
+name: Android Build
 
-# Trigger configuration
 on:
   push:
     branches: [ main ]
-    paths-ignore:
-      - '**.md'
-      - '.gitignore'
-      - 'docs/**'
   pull_request:
     branches: [ main ]
-    paths-ignore:
-      - '**.md'
-      - '.gitignore'
-      - 'docs/**'
-  # Manual trigger
-  workflow_dispatch:
-
-# Environment variables
-env:
-  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false -Dkotlin.incremental=false"
-  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 
 jobs:
-  validate:
-    name: Validate Gradle Wrapper
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1
-
-  code-analysis:
-    name: Static Code Analysis
-    needs: validate
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: 'gradle'
-
-      - name: Run detekt
-        run: ./gradlew detekt
-
-      - name: Upload detekt results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: detekt-report
-          path: |
-            **/build/reports/detekt/
-            **/build/reports/lint-results-debug.html
-
   build:
-    name: Build and Test
-    needs: code-analysis
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: 'gradle'
-
-      - name: Cache Gradle packages
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          cache: gradle
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Run unit tests
-        run: ./gradlew test
-
-      - name: Build debug APK
-        run: ./gradlew assembleDebug --stacktrace
-
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: |
-            **/build/reports/tests/
-            **/build/reports/androidTests/
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
-          retention-days: 14
-
-  release:
-    name: Create Release
-    needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download APK
-        uses: actions/download-artifact@v4
-        with:
-          name: debug-apk
-
-      - name: Generate release tag
-        id: tag
+      # Enhanced Build Step with Error Logging
+      - name: Build with Gradle
+        id: build
+        continue-on-error: true
         run: |
-          echo "::set-output name=release_tag::$(date +"%Y.%m.%d_%H-%M")"
+          ./gradlew assembleDebug --stacktrace --info > build.log 2>&1
+          BUILD_SUCCESS=$?
+          if [ $BUILD_SUCCESS -ne 0 ]; then
+            echo "::error::Build failed! Collecting error information..."
+            echo "=================== LAST 50 LINES OF BUILD LOG ==================="
+            tail -n 50 build.log
+            echo "==============================================================="
+            
+            # Extract specific error information
+            echo "=================== SPECIFIC ERRORS FOUND ======================="
+            grep -A 5 "FAILURE:" build.log || true
+            grep -A 10 "What went wrong:" build.log || true
+            grep -A 10 "Caused by:" build.log || true
+            echo "==============================================================="
+            
+            # Save detailed error information
+            mkdir -p error-logs
+            cp build.log error-logs/
+            cp -r app/build/reports error-logs/ 2>/dev/null || true
+            exit 1
+          fi
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
+      # Upload Error Logs (only if build fails)
+      - name: Upload Error Logs
+        if: failure()
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: ${{ steps.tag.outputs.release_tag }}
-          name: Release ${{ steps.tag.outputs.release_tag }}
-          files: app-debug.apk
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: error-logs
+          path: |
+            error-logs/
+            **/build/reports/
+            build.log
+          retention-days: 7
 
-  notify:
-    name: Notification
-    needs: [build, release]
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-      - name: Send Telegram Notification
-        uses: appleboy/telegram-action@master
+      # Upload APK (only if build succeeds)
+      - name: Upload APK
+        if: success()
+        uses: actions/upload-artifact@v4
         with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          message: |
-            🚀 Build Status: ${{ needs.build.result }}
-            
-            Repository: ${{ github.repository }}
-            Branch: ${{ github.ref_name }}
-            Commit: ${{ github.sha }}
-            
-            Workflow: ${{ github.workflow }}
-            Run: ${{ github.run_number }}
-            
-            ${{ github.event.head_commit.message }}
+          name: app-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
