@@ -14,6 +14,25 @@ interface TelegramApiService {
     suspend fun sendDocument(
         @Query("chat_id") chatId: String,
         @Part file: MultipartBody.Part,
-        @Query("caption") caption: String? = null
-    ): Response<ResponseBody>
+        @Query("caption") caption: String? = null,
+        @Query("disable_notification") disableNotification: Boolean? = null
+    ): Response<TelegramResponse>
 }
+
+data class TelegramResponse(
+    val ok: Boolean,
+    val result: DocumentResult?
+)
+
+data class DocumentResult(
+    val message_id: Long,
+    val document: Document?
+)
+
+data class Document(
+    val file_id: String,
+    val file_unique_id: String,
+    val file_name: String?,
+    val mime_type: String?,
+    val file_size: Long?
+)
