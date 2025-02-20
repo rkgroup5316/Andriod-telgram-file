@@ -6,7 +6,6 @@ pluginManagement {
     }
 }
 
-// Single dependencyResolutionManagement block
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -22,8 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Andriod-telgram-file"
 
-// Include all modules
+// Only include existing modules for now
 include(":app")
-include(":library-android")
-include(":library-compose")
-include(":library-kotlin")
