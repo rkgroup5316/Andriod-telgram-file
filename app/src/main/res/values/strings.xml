@@ -1,5 +1,10 @@
 <resources>
-    <string name="app_name">Telegram File Uploader</string>
-    <string name="permissions_granted">Required permissions granted</string>
-    <string name="permissions_required">Required permissions are needed to select files</string>
-</resources>?
+    <string name="no_files_selected">No files were selected</string>
+    <string name="upload_success">Files uploaded successfully</string>
+    <string name="upload_cancelled">Upload cancelled</string>
+    <string name="permission_required">Permission Required</string>
+    <string name="permission_rationale">Storage permission is required to select and upload files</string>
+    <string name="retry">Retry</string>
+    <string name="cancel">Cancel</string>
+    <string name="progress_format">Uploading %1$d of %2$d files</string>
+</resources>
