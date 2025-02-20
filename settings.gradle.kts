@@ -6,6 +6,9 @@ pluginManagement {
     }
 }
 
+// Enable type-safe project accessors
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -21,5 +24,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Andriod-telgram-file"
 
-// Only include existing modules for now
-include(":app")
+// Include all modules
+include(":app", ":buildSrc")
