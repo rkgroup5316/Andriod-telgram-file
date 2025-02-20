@@ -22,48 +22,10 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      # Enhanced Build Step with Error Logging
       - name: Build with Gradle
-        id: build
-        continue-on-error: true
-        run: |
-          ./gradlew assembleDebug --stacktrace --info > build.log 2>&1
-          BUILD_SUCCESS=$?
-          if [ $BUILD_SUCCESS -ne 0 ]; then
-            echo "::error::Build failed! Collecting error information..."
-            echo "=================== LAST 50 LINES OF BUILD LOG ==================="
-            tail -n 50 build.log
-            echo "==============================================================="
-            
-            # Extract specific error information
-            echo "=================== SPECIFIC ERRORS FOUND ======================="
-            grep -A 5 "FAILURE:" build.log || true
-            grep -A 10 "What went wrong:" build.log || true
-            grep -A 10 "Caused by:" build.log || true
-            echo "==============================================================="
-            
-            # Save detailed error information
-            mkdir -p error-logs
-            cp build.log error-logs/
-            cp -r app/build/reports error-logs/ 2>/dev/null || true
-            exit 1
-          fi
+        run: ./gradlew assembleDebug --stacktrace --info --debug --warning-mode all --console=verbose
 
-      # Upload Error Logs (only if build fails)
-      - name: Upload Error Logs
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: error-logs
-          path: |
-            error-logs/
-            **/build/reports/
-            build.log
-          retention-days: 7
-
-      # Upload APK (only if build succeeds)
       - name: Upload APK
-        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
