@@ -5,6 +5,7 @@
     <string name="upload_cancelled">Upload cancelled</string>
     <string name="permission_required">Permission Required</string>
     <string name="permission_rationale">Storage permission is required to select and upload files</string>
+    <string name="add_files">Add files</string>
     <string name="retry">Retry</string>
     <string name="cancel">Cancel</string>
     <string name="progress_format">Uploading %1$d of %2$d files</string>
