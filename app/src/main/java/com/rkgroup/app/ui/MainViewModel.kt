@@ -7,9 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.rkgroup.app.data.repository.FileUploadRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
@@ -32,9 +34,16 @@ class MainViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow<UiState>(UiState.Initial)
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+    
+    private var currentUploadJob: Job? = null
+    private var failedFiles = mutableListOf<FileInfo>()
+    private var lastContentResolver: ContentResolver? = null
 
     fun processFilesInBackground(uris: List<Uri>, contentResolver: ContentResolver) {
-        viewModelScope.launch(Dispatchers.IO) {
+        cancelUploads() // Cancel any ongoing uploads before starting new ones
+        lastContentResolver = contentResolver
+        
+        currentUploadJob = viewModelScope.launch(Dispatchers.IO) {
             try {
                 val validFiles = validateFiles(uris, contentResolver)
                 if (validFiles.isEmpty()) {
@@ -42,6 +51,7 @@ class MainViewModel @Inject constructor(
                     return@launch
                 }
 
+                failedFiles.clear() // Clear previous failed files when starting new upload
                 val totalFiles = validFiles.size
                 validFiles.forEachIndexed { index, fileInfo ->
                     _uiState.value = UiState.Progress(
@@ -49,7 +59,12 @@ class MainViewModel @Inject constructor(
                         total = totalFiles,
                         fileName = fileInfo.name
                     )
-                    processFile(fileInfo, contentResolver)
+                    try {
+                        processFile(fileInfo, contentResolver)
+                    } catch (e: Exception) {
+                        failedFiles.add(fileInfo)
+                        throw e
+                    }
                 }
                 
                 _uiState.value = UiState.Success
@@ -59,6 +74,50 @@ class MainViewModel @Inject constructor(
                         is IOException -> "Error accessing files: ${e.message}"
                         is SecurityException -> "Permission denied: ${e.message}"
                         else -> "Unexpected error: ${e.message}"
+                    }
+                )
+            }
+        }
+    }
+
+    fun cancelUploads() {
+        currentUploadJob?.cancel()
+        currentUploadJob = null
+        _uiState.value = UiState.Initial
+    }
+
+    fun retryFailedUploads() {
+        if (failedFiles.isEmpty() || lastContentResolver == null) {
+            _uiState.value = UiState.Error("No failed uploads to retry")
+            return
+        }
+
+        val filesToRetry = failedFiles.toList()
+        failedFiles.clear()
+
+        currentUploadJob?.cancel()
+        currentUploadJob = viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val totalFiles = filesToRetry.size
+                filesToRetry.forEachIndexed { index, fileInfo ->
+                    _uiState.value = UiState.Progress(
+                        current = index + 1,
+                        total = totalFiles,
+                        fileName = fileInfo.name
+                    )
+                    try {
+                        processFile(fileInfo, lastContentResolver!!)
+                    } catch (e: Exception) {
+                        failedFiles.add(fileInfo)
+                        throw e
+                    }
+                }
+                _uiState.value = UiState.Success
+            } catch (e: Exception) {
+                _uiState.value = UiState.Error(
+                    when (e) {
+                        is IOException -> "Retry failed - Network error: ${e.message}"
+                        else -> "Retry failed: ${e.message}"
                     }
                 )
             }
@@ -130,7 +189,14 @@ class MainViewModel @Inject constructor(
                 fileName = fileInfo.name,
                 mimeType = fileInfo.mimeType,
                 contentResolver = contentResolver
-            )
+            ).collect { uploadState ->
+                when (uploadState) {
+                    is FileUploadRepository.UploadState.Error -> {
+                        throw IOException("Failed to upload ${fileInfo.name}: ${uploadState.message}")
+                    }
+                    else -> {} // Other states handled by Progress updates
+                }
+            }
         } catch (e: Exception) {
             throw IOException("Failed to upload ${fileInfo.name}: ${e.message}")
         }
@@ -152,5 +218,10 @@ class MainViewModel @Inject constructor(
         ) : UiState()
         object Success : UiState()
         data class Error(val message: String) : UiState()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        cancelUploads()
     }
 }
