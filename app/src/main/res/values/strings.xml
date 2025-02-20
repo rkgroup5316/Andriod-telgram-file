@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_name">Telegram File Uploader</string>
     <string name="no_files_selected">No files were selected</string>
     <string name="upload_success">Files uploaded successfully</string>
     <string name="upload_cancelled">Upload cancelled</string>
