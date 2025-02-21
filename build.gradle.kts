@@ -1,3 +1,5 @@
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
@@ -8,7 +10,6 @@ plugins {
     alias(libs.plugins.versions)
 }
 
-// Remove the allprojects block completely
 
 subprojects {
     apply(plugin = "io.gitlab.arturbosch.detekt")
