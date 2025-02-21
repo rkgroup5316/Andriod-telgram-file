@@ -1,3 +1,5 @@
+import com.android.build.gradle.api.VariantFilter
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -58,10 +60,13 @@ android {
         }
     }
 
-    // Add this to disable test variants
-    variantFilter { variant ->
-        if (variant.name.contains("AndroidTest")) {
-            variant.setIgnore(true)
+    variantFilter { filter: VariantFilter ->
+        val buildType = filter.buildType.name
+        val flavors = filter.flavors.joinToString(separator = "") { it.name }
+        // Construct the variant name (approximate)
+        val variantName = "$flavors$buildType"
+        if (variantName.contains("AndroidTest") || buildType.contains("AndroidTest")) {
+            filter.setIgnore(true)
         }
     }
 }
