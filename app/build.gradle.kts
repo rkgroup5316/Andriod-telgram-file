@@ -15,10 +15,6 @@ android {
         targetSdk = libs.versions.target.sdk.version.get().toInt()
         versionCode = 1
         versionName = "1.0.0"
-        
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments["clearPackageData"] = "true"
-  
         multiDexEnabled = true
     }
 
@@ -32,19 +28,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
-    testOptions {
-        unitTests {
-            isIncludeAndroidResources = true
-            isReturnDefaultValues = true
-        }
-        // Add this block for androidTests
-        execution = "ANDROIDX_TEST_ORCHESTRATOR"
-        animationsDisabled = true
-    }
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
-        freeCompilerArgs = listOf("-Xjvm-default=all" )
+        freeCompilerArgs = listOf("-Xjvm-default=all")
     }
 
     buildTypes {
@@ -106,7 +93,7 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
     implementation(libs.gson)
-    implementation(libs.coil)  // For image loading
+    implementation(libs.coil)
     
     // Coroutines
     implementation(libs.coroutines.core)
@@ -119,27 +106,11 @@ dependencies {
     // Debug Tools (debug build only)
     debugImplementation(libs.timber)
     debugImplementation(libs.leakcanary)
-    
-    // Testing
-    testImplementation(libs.junit)
-    testImplementation(libs.mockk)
-    testImplementation(libs.coroutines.test)
-    testImplementation(libs.turbine)
-    androidTestImplementation(libs.androidx.test.junit)
-    androidTestImplementation(libs.androidx.test.core)
-    androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(libs.hilt.testing)
-
-    androidTestUtil("androidx.test:orchestrator:1.4.2")
-    androidTestImplementation("androidx.test:rules:1.5.0")
-    androidTestImplementation("androidx.test:runner:1.5.2")
-
 
     // Desugaring
     coreLibraryDesugaring(libs.android.desugar)
 }
 
-// Allow references to generated code
 kapt {
     correctErrorTypes = true
 }
