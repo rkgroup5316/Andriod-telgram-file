@@ -1,14 +1,22 @@
 plugins {
     `kotlin-dsl`
 }
-
 repositories {
     google()
     mavenCentral()
-    gradlePluginPortal()
 }
 
 dependencies {
-    compileOnly("com.android.tools.build:gradle:8.2.0")
-    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.20")
+    implementation(libs.kgp)
+    implementation(libs.agp)
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17.toString()
+    }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
