@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.rkgroup.app"
-    compileSdk = libs.versions.compile.sdk.version.get().toInt()
+    compileSdk = libs.versions.compile.sdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.rkgroup.app"
-        minSdk = libs.versions.min.sdk.version.get().toInt()
-        targetSdk = libs.versions.target.sdk.version.get().toInt()
+        minSdk = libs.versions.min.sdk.get().toInt()
+        targetSdk = libs.versions.target.sdk.get().toInt()
         versionCode = 1
         versionName = "1.0.0"
         multiDexEnabled = true
@@ -38,7 +38,8 @@ android {
         debug {
             isMinifyEnabled = false
             isDebuggable = true
-            buildConfigField("String", "TELEGRAM_BOT_TOKEN", "\"${System.getenv("TELEGRAM_BOT_TOKEN") ?: ""}\"")
+            buildConfigField("String", "TELEGRAM_BOT_TOKEN", 
+                "\"${System.getenv("TELEGRAM_BOT_TOKEN") ?: "default_debug_token"}\"")
         }
         release {
             isMinifyEnabled = true
@@ -47,19 +48,20 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "TELEGRAM_BOT_TOKEN", "\"${System.getenv("TELEGRAM_BOT_TOKEN") ?: ""}\"")
+            buildConfigField("String", "TELEGRAM_BOT_TOKEN", 
+                "\"${System.getenv("TELEGRAM_BOT_TOKEN") ?: ""}\"")
         }
     }
 
     packaging {
         resources {
-            excludes.add("/META-INF/{AL2.0,LGPL2.1}")
-            excludes.add("META-INF/LICENSE*")
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/LICENSE*"
         }
     }
 }
 
-// Disable all test-related tasks
+// Optional: Disable test tasks
 tasks.configureEach {
     if (name.contains("test", ignoreCase = true) || 
         name.contains("Test", ignoreCase = true) ||
@@ -112,7 +114,7 @@ dependencies {
     implementation(libs.security.crypto)
     implementation(libs.biometric)
     
-    // Debug Tools (debug build only)
+    // Debug Tools
     debugImplementation(libs.timber)
     debugImplementation(libs.leakcanary)
 
