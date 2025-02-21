@@ -5,10 +5,10 @@ plugins {
 repositories {
     google()
     mavenCentral()
-    gradlePluginPortal()  // Add this
+    gradlePluginPortal()
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.20")
-    implementation("com.android.tools.build:gradle:8.2.0")
+    compileOnly("com.android.tools.build:gradle:8.2.0")
+    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.20")
 }
