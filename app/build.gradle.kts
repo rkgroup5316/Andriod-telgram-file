@@ -57,6 +57,13 @@ android {
             excludes.add("META-INF/LICENSE*")
         }
     }
+
+    // Add this to disable test variants
+    variantFilter { variant ->
+        if (variant.name.contains("AndroidTest")) {
+            variant.setIgnore(true)
+        }
+    }
 }
 
 dependencies {
