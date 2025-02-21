@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.rkgroup.app"
-    compileSdk = libs.versions.compile.sdk.get().toInt()
+    compileSdk = 34  // Direct value instead of version catalog
 
     defaultConfig {
         applicationId = "com.rkgroup.app"
-        minSdk = libs.versions.min.sdk.get().toInt()
-        targetSdk = libs.versions.target.sdk.get().toInt()
+        minSdk = 24    // Direct value instead of version catalog
+        targetSdk = 34 // Direct value instead of version catalog
         versionCode = 1
         versionName = "1.0.0"
         multiDexEnabled = true
@@ -61,15 +61,6 @@ android {
     }
 }
 
-// Optional: Disable test tasks
-tasks.configureEach {
-    if (name.contains("test", ignoreCase = true) || 
-        name.contains("Test", ignoreCase = true) ||
-        name.contains("androidTest", ignoreCase = true)) {
-        enabled = false
-    }
-}
-
 dependencies {
     // Core Android
     implementation(libs.core.ktx)
@@ -90,9 +81,6 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     kapt(libs.room.compiler)
-    
-    // DataStore
-    implementation(libs.datastore.preferences)
     
     // Hilt DI
     implementation(libs.hilt.android)
