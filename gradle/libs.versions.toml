@@ -34,14 +34,6 @@ coroutines = "1.7.3"
 security_crypto = "1.1.0-alpha06"
 biometric = "1.2.0-alpha05"
 
-# Testing
-junit = "4.13.2"
-androidx_test = "1.6.1"
-androidx_test_ext = "1.2.1"
-espresso_core = "3.6.1"
-mockk = "1.13.8"
-turbine = "1.0.0"
-
 # Debug & Performance
 timber = "5.0.1"
 leakcanary = "2.12"
@@ -66,7 +58,6 @@ lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version.r
 
 # WorkManager
 work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "work" }
-work-testing = { module = "androidx.work:work-testing", version.ref = "work" }
 
 # Room Database
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
@@ -79,7 +70,6 @@ datastore-preferences = { module = "androidx.datastore:datastore-preferences", v
 # Hilt DI
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
-hilt-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
 
 # Networking
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
@@ -92,21 +82,10 @@ coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 # Coroutines
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 
 # Security
 security-crypto = { module = "androidx.security:security-crypto", version.ref = "security_crypto" }
 biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
-
-# Testing
-junit = { module = "junit:junit", version.ref = "junit" }
-androidx-test-junit = { module = "androidx.test.ext:junit", version.ref = "androidx_test_ext" }
-androidx-test-core = { module = "androidx.test:core", version.ref = "androidx_test" }
-androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx_test" }
-androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx_test" }
-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso_core" }
-mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
-turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 # Debug
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
