@@ -17,6 +17,8 @@ android {
         versionName = "1.0.0"
         
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments["clearPackageData"] = "true"
+  
         multiDexEnabled = true
     }
 
@@ -35,6 +37,9 @@ android {
             isIncludeAndroidResources = true
             isReturnDefaultValues = true
         }
+        // Add this block for androidTests
+        execution = "ANDROIDX_TEST_ORCHESTRATOR"
+        animationsDisabled = true
     }
 
     kotlinOptions {
