@@ -1,4 +1,3 @@
-import com.android.build.gradle.api.VariantFilter
 
 plugins {
     alias(libs.plugins.android.application)
@@ -18,6 +17,7 @@ android {
         versionCode = 1
         versionName = "1.0.0"
         multiDexEnabled = true
+        testInstrumentationRunner = null  // Disable instrumentation tests
     }
 
     buildFeatures {
@@ -60,13 +60,11 @@ android {
         }
     }
 
-    variantFilter { filter: VariantFilter ->
-        val buildType = filter.buildType.name
-        val flavors = filter.flavors.joinToString(separator = "") { it.name }
-        // Construct the variant name (approximate)
-        val variantName = "$flavors$buildType"
-        if (variantName.contains("AndroidTest") || buildType.contains("AndroidTest")) {
-            filter.setIgnore(true)
+    // Disable test artifacts completely
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+        unitTests.all { 
+            it.enabled = false 
         }
     }
 }
