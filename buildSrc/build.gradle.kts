@@ -4,11 +4,12 @@ plugins {
 repositories {
     google()
     mavenCentral()
+    gradlePluginPortal()
 }
 
 dependencies {
-    implementation(libs.kgp)
-    implementation(libs.agp)
+    compileOnly(libs.agp)  // Use version catalog reference
+    compileOnly(libs.kgp)  // Use version catalog reference
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
