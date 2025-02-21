@@ -30,9 +30,16 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
+    }
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
+        freeCompilerArgs = listOf("-Xjvm-default=all" )
     }
 
     buildTypes {
@@ -117,7 +124,12 @@ dependencies {
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.hilt.testing)
-    
+
+    androidTestUtil("androidx.test:orchestrator:1.4.2")
+    androidTestImplementation("androidx.test:rules:1.5.0")
+    androidTestImplementation("androidx.test:runner:1.5.2")
+
+
     // Desugaring
     coreLibraryDesugaring(libs.android.desugar)
 }
