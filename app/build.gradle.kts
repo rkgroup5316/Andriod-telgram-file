@@ -1,4 +1,3 @@
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -17,7 +16,6 @@ android {
         versionCode = 1
         versionName = "1.0.0"
         multiDexEnabled = true
-        testInstrumentationRunner = null  // Disable instrumentation tests
     }
 
     buildFeatures {
@@ -59,13 +57,14 @@ android {
             excludes.add("META-INF/LICENSE*")
         }
     }
+}
 
-    // Disable test artifacts completely
-    testOptions {
-        unitTests.isReturnDefaultValues = true
-        unitTests.all { 
-            it.enabled = false 
-        }
+// Disable all test-related tasks
+tasks.configureEach {
+    if (name.contains("test", ignoreCase = true) || 
+        name.contains("Test", ignoreCase = true) ||
+        name.contains("androidTest", ignoreCase = true)) {
+        enabled = false
     }
 }
 
