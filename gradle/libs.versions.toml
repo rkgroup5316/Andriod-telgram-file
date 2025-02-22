@@ -105,6 +105,12 @@ detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", 
 # Tools
 android-desugar = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar" }
 
+#test 
+androidx_test_rules = { module = "androidx.test:rules", version.ref = "androidx.test" }
+androidx_test_runner = { module = "androidx.test:runner", version.ref = "androidx.test" }
+androidx_test_ext_junit = { module = "androidx.test.ext:junit", version.ref = "androidx.test.ext" }
+androidx_test_ext_junit_ktx = { module = "androidx.test.ext:junit-ktx", version.ref = "androidx.test.ext" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
