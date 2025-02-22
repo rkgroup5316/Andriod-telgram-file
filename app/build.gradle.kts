@@ -1,6 +1,6 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    id("com.android.application")
+    kotlin("android")
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt)
 }
@@ -15,18 +15,19 @@ android {
         targetSdk = 34 // Direct value instead of version catalog
         versionCode = 1
         versionName = "1.0.0"
-        multiDexEnabled = true
+        
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    
     }
 
     buildFeatures {
         viewBinding = true
-        buildConfig = true
     }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
@@ -35,23 +36,20 @@ android {
     }
 
     buildTypes {
-        debug {
+        getByName("release") {
             isMinifyEnabled = false
-            isDebuggable = true
-            buildConfigField("String", "TELEGRAM_BOT_TOKEN", 
-                "\"${System.getenv("TELEGRAM_BOT_TOKEN") ?: "default_debug_token"}\"")
-        }
-        release {
-            isMinifyEnabled = true
-            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "TELEGRAM_BOT_TOKEN", 
-                "\"${System.getenv("TELEGRAM_BOT_TOKEN") ?: ""}\"")
         }
     }
+    lint {
+        warningsAsErrors = true
+        abortOnError = true
+        disable.add("GradleDependency")
+    }
+
 
     packaging {
         resources {
@@ -108,8 +106,12 @@ dependencies {
 
     // Desugaring
     coreLibraryDesugaring(libs.android.desugar)
+
+    testImplementation(libs.junit)
+
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.ext.junit.ktx)
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.espresso.core)
 }
 
-kapt {
-    correctErrorTypes = true
-}
