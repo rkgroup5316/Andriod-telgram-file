@@ -6,20 +6,17 @@ pluginManagement {
     }
 }
 
-// Enable type-safe project accessors
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
     }
-    
 }
 
+rootProject.name = ("Andriod-telgram-file")
 
-rootProject.name = "Andriod-telgram-file"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
-// Include all modules
-include(":app")
+include(
+    "app"
+)
