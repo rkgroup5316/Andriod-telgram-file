@@ -45,7 +45,7 @@ leakcanary = "2.12"
 # Tools
 desugar = "2.0.4"
 detekt = "1.23.7"
-benmanesversion = "0.52.0
+benmanesversion = "0.52.0"
 
 compose = "1.5.4"  # The compose compiler version
 compose_plugin = "1.5.4"  # The compose plugin version
