@@ -4,10 +4,12 @@ plugins {
     id("com.android.application") apply false
     id("com.android.library") apply false
     kotlin("android") apply false
-    alias(libs.plugins.kotlin.kapt) apply false
-    alias(libs.plugins.hilt) apply false
+    alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.detekt)
+    alias(libs.plugins.hilt) apply false
     alias(libs.plugins.versions)
+    cleanup
+    base
 }
 
 
