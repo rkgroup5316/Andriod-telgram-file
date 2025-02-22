@@ -45,7 +45,11 @@ leakcanary = "2.12"
 # Tools
 desugar = "2.0.4"
 detekt = "1.23.7"
-benmanesversion = "0.52.0"
+benmanesversion = "0.52.0
+
+compose = "1.5.4"  # The compose compiler version
+compose_plugin = "1.5.4"  # The compose plugin version
+
 
 [libraries]
 # Core Android
@@ -117,4 +121,4 @@ kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "benmanesversion" }
-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+compose = { id = "org.jetbrains.compose", version.ref = "compose_plugin" }
