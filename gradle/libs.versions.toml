@@ -122,4 +122,4 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "benmanesversion" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose_plugin" }
-compose-compiler = { id = "androidx.compose.compiler:compiler", version.ref = "compose" }
+compose-compiler = { id = "androidx.compose.compiler", version.ref = "compose" }
