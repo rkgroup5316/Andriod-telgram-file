@@ -12,7 +12,11 @@ plugins {
     base
 }
 
-
+repositories {
+    google()
+    mavenCentral()
+    gradlePluginPortal()
+}
 subprojects {
     apply(plugin = "io.gitlab.arturbosch.detekt")
 
