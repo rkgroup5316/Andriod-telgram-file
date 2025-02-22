@@ -19,5 +19,8 @@ rootProject.name = ("Andriod-telgram-file")
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(
-    "app"
+    "app",
+    "library-android",
+    "library-compose",
+    "library-kotlin"
 )
